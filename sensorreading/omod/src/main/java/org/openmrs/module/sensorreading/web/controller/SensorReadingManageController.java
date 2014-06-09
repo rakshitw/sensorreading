@@ -111,37 +111,49 @@ public class  SensorReadingManageController {
 		
 		//Integer patientId = Integer.parseInt(request.getParameter("patientId"));		
 		//Patient patient = 
-		int encounterId=2451;
-		int sensorId=1;
-		System.out.println("\n\nthe patient id id  " + patientId);
+		//int encounterId=2451;
+		//int sensorId=1;
+		System.out.println("\n\n1 the patient id id  " + patientId);
 		Patient patient = (Patient) Context.getPatientService().getPatient(patientId);
+		System.out.println("2 Fetched patient name " + patient.getGivenName());
 		
 		Encounter enc = new Encounter();
+		System.out.println("3 Enc To String " +enc.toString());
 //		enc.setEncounterId(encounterId);
 		Date d = new Date(System.currentTimeMillis());
 		enc.setEncounterDatetime(d);
+		System.out.println("4 Date " +d.toString());
+		
 		enc.setPatient(patient);
 //		List<EncounterType> et = (List<EncounterType>)Context.getEncounterService().getAllEncounterTypes();
+		System.out.println("5 Enconunter patient name " +enc.getPatient().getGivenName());
 		
 		
 		enc.setEncounterType((EncounterType)Context.getEncounterService().getEncounterType(1));
+		System.out.println(enc.toString());
 		List<Provider> provider = (List<Provider> )Context.getProviderService().getAllProviders();
 		for(Provider p : provider)
-			System.out.println("provider is" + p.getProviderId() + p.getId() + p.getAttributes() + p.getName());
+			System.out.println("6 provider is" + p.getProviderId() + p.getId() + p.getAttributes() + p.getName());
 		EncounterRole er = (EncounterRole)Context.getEncounterService().getEncounterRole(1);
-		System.out.println("er is " +  er.getName() + er.getDescription());
+		System.out.println("7 er is " +  er.getName() + er.getDescription());
 		
 		enc.setProvider((EncounterRole)Context.getEncounterService().getEncounterRole(1),(Provider) Context.getProviderService().getProvider(1));
+		System.out.println("8 Provider is is "+((Provider) Context.getProviderService().getProvider(1)).getName());
+		System.out.println("9 encounter string is " + enc.toString());
 		Encounter enc_formed = (Encounter)Context.getEncounterService().saveEncounter(enc);
 		Person person = (Person) Context.getPatientService().getPatient(patientId);
+		System.out.println("10 person name  is " + person.getGivenName());
 		
 		Obs obs = new Obs();
 //		obs.setObsId(1012);
 		obs.setPerson(person);
+		System.out.println("11 observation person name is " + obs.getPerson().getGivenName());
 		Concept concept = (Concept)Context.getConceptService().getConcept(5090);
 		obs.setObsDatetime(d);;
 		obs.setConcept(concept);
 		obs.setValueNumeric((double) 170);
+		System.out.println("12 observation tostring is " +obs.toString());
+
 //		obs.setEncounter(enc);
 //		Context.getObsService().s
 		Obs obs_formed = (Obs)Context.getObsService().saveObs(obs, "");
@@ -149,12 +161,17 @@ public class  SensorReadingManageController {
 		sensorReading.setEncounter_id(enc_formed.getEncounterId());
 		sensorReading.setPatient(patient);
 		SensorMapping sensor = (SensorMapping)Context.getService(SensorMappingService.class).retrieveSensorMapping(10);
+		System.out.println("13 Sensor Mapping Object 10 is " +((SensorMapping)Context.getService(SensorMappingService.class).retrieveSensorMapping(10)).getSensor_name());
 		sensorReading.setSensor(sensor);
 		sensorReading.setEncounter(enc_formed);
 		sensorReading.setObservation(obs_formed);
+		sensorReading.setDate(d);
+		System.out.println("14 Trying to Create sensorReading object as " +sensorReading.toString());
+		System.out.println("15 Transient sensorReading object is " +sensorReading.getSensor().getSensor_name()+" "+sensorReading.getEncounter().getId()+" ");
 		Context.getService(SensorReadingService.class).saveSensorReading(sensorReading);
-		Integer encounter_id = 17;
+		Integer encounter_id = 22;
 		SensorReading sr = (SensorReading)Context.getService(SensorReadingService.class).readSensorReading(encounter_id);
+		//System.out.println("16 Sensor Reading for Encounter id " +encounter_id + " is "+((SensorReading)Context.getService(SensorReadingService.class).readSensorReading(encounter_id)).getSensor().getSensor_name());
 		
 		System.out.println("date is " + sr.getObservation().getObsDatetime());
 		SensorMapping sensorMapping = new SensorMapping();
