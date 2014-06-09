@@ -17,6 +17,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
+import org.openmrs.BaseOpenmrsData;
 import org.openmrs.BaseOpenmrsObject;
 import org.openmrs.Concept;
 
@@ -29,7 +30,7 @@ import org.openmrs.Concept;
  * @author rakshit
  *
  */
-public class SensorConceptMapping extends BaseOpenmrsObject implements Serializable {
+public class SensorConceptMapping extends BaseOpenmrsData implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	

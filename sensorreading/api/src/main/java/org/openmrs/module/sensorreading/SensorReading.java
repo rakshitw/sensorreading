@@ -15,6 +15,7 @@ package org.openmrs.module.sensorreading;
 
 import java.io.Serializable;
 
+import org.openmrs.BaseOpenmrsData;
 import org.openmrs.BaseOpenmrsObject;
 import org.openmrs.Encounter;
 import org.openmrs.Obs;
@@ -29,7 +30,7 @@ import org.openmrs.Patient;
  * @author rakshit
  *
  */
-public class SensorReading extends BaseOpenmrsObject implements Serializable {
+public class SensorReading extends BaseOpenmrsData implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	

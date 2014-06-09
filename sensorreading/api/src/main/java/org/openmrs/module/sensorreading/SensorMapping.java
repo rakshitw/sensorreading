@@ -15,6 +15,7 @@ package org.openmrs.module.sensorreading;
 
 import java.io.Serializable;
 
+import org.openmrs.BaseOpenmrsData;
 import org.openmrs.BaseOpenmrsObject;
 import org.openmrs.BaseOpenmrsMetadata;
 
@@ -27,7 +28,7 @@ import org.openmrs.BaseOpenmrsMetadata;
  * @author rakshit
  *
  */
-public class SensorMapping extends BaseOpenmrsObject implements Serializable {
+public class SensorMapping extends BaseOpenmrsData implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
