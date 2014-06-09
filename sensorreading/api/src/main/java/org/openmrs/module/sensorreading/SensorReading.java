@@ -14,6 +14,7 @@
 package org.openmrs.module.sensorreading;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import org.openmrs.BaseOpenmrsData;
 import org.openmrs.BaseOpenmrsObject;
@@ -39,7 +40,7 @@ public class SensorReading extends BaseOpenmrsData implements Serializable {
 	private Obs observation;
 	private Patient patient;
 	private Encounter encounter;
-	
+	private Date date;
 	public Encounter getEncounter() {
 		return encounter;
 	}
@@ -79,6 +80,12 @@ public class SensorReading extends BaseOpenmrsData implements Serializable {
 	}
 	public void setSensor(SensorMapping sensor) {
 		this.sensor = sensor;
+	}
+	public Date getDate() {
+		return date;
+	}
+	public void setDate(Date date) {
+		this.date = date;
 	}
 	
 

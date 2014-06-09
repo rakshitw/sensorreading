@@ -17,11 +17,8 @@
 	</class>
 -->
 
-<class name="SensorReading" table="sensor_reading2">
-		<!-- <id name="encounter" type="java.lang.Integer" column="encounter_id" unsaved-value="0">
-			<generator class="assigned" />
-		</id>
-		<discriminator column="encounter_id" insert="false" /> -->
+<class name="SensorReading" table="sensor_reading3">
+    
 		<!--  Making encounter id as foreign key, derived from encounter -->
 		<id name="encounter_id" type="java.lang.Integer">
 			<column name="encounter_id" />
@@ -32,20 +29,9 @@
 		<one-to-one name="encounter" class="org.openmrs.Encounter"
 			constrained="true"></one-to-one>
 		
-		<!--
-		<property name="uuid" type="java.lang.String" column="uuid"
-			length="19" unique="true" />
+		<property name="date" type="java.util.Date" 
+			column="test_date" not-null="true" length="19"/>
 		
-		<id name="stockId" type="java.lang.Integer">
-			<column name="STOCK_ID" />
-			<generator class="foreign">
-				<param name="property">stock</param>
-			</generator>
-		</id>
-		<one-to-one name="stock" class="com.mkyong.stock.Stock"
-			constrained="true"></one-to-one>
-		
-		-->
 		<many-to-one name="sensor" class="org.openmrs.module.sensorreading.SensorMapping" not-null="true">
 		    <column name="sensor_id" />
 		</many-to-one>

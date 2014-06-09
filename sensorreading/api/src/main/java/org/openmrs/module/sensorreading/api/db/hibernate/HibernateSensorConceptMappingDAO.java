@@ -13,14 +13,19 @@
  */
 package org.openmrs.module.sensorreading.api.db.hibernate;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.openmrs.Concept;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.sensorreading.SensorConceptMapping;
+import org.openmrs.module.sensorreading.SensorMapping;
+import org.openmrs.module.sensorreading.api.SensorMappingService;
 import org.openmrs.module.sensorreading.api.db.SensorConceptMappingDAO;
 import org.openmrs.module.sensorreading.api.db.SensorReadingDAO;
 import org.openmrs.module.sensorreading.utils.SensorConceptUtil;
@@ -63,8 +68,22 @@ public class HibernateSensorConceptMappingDAO implements SensorConceptMappingDAO
 //TODO write get method
 	@Override
 	public SensorConceptMapping getSensorConceptMapping(int sensor_id) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		SensorMapping sm = Context.getService(SensorMappingService.class).retrieveSensorMapping(sensor_id);
+		Query conceptQuery = sessionFactory.getCurrentSession().createQuery("select E.concept from SensorConceptUtil E WHERE E.sensor = :userValue");
+		conceptQuery.setParameter("userValue",sm);
+		List<Concept> conceptList = conceptQuery.list();
+		Set<Concept> conceptSet = new HashSet<Concept>();
+		for(Concept concept_element : conceptList)
+		{
+//			Concept concept = (Concept) concept_element;
+			conceptSet.add(concept_element);
+		}
+		
+		SensorConceptMapping scm = new SensorConceptMapping();
+		scm.setConcepts(conceptSet);
+		scm.setSensor(sm);
+		return scm;
 	}
 
 	@Override

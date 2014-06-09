@@ -15,17 +15,18 @@
 
 
 	<diff>
-		<version>8.0-SNAPSHOT</version>
+		<version>11.0-SNAPSHOT</version>
 		<author>rakshit</author>
 		<date></date>
 		<description></description>
 		<sql>
 		    <!-- DROP TABLE IF EXISTS appointment; -->
-			CREATE TABLE IF NOT EXISTS sensor_reading2(
+			CREATE TABLE IF NOT EXISTS sensor_reading3(
 				encounter_id int(19) NOT NULL,
-				sensor_id int(19) NOT NULL,
 				observation_id int(19) NOT NULL,
+				test_date date NOT NULL,
 				patient_id int(19) NOT NULL,
+				sensor_id int(19) NOT NULL,
 				  PRIMARY KEY (`encounter_id`)
 			) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 			
