@@ -16,8 +16,6 @@ package org.openmrs.module.sensorreading;
 import java.io.Serializable;
 
 import org.openmrs.BaseOpenmrsData;
-import org.openmrs.BaseOpenmrsObject;
-import org.openmrs.BaseOpenmrsMetadata;
 
 /**
  * It is a model class. It should extend either {@link BaseOpenmrsObject} or {@link BaseOpenmrsMetadata}.
@@ -30,6 +28,21 @@ import org.openmrs.BaseOpenmrsMetadata;
  */
 public class SensorMapping extends BaseOpenmrsData implements Serializable {
 
+	/*
+	 * Constructor is needed for Rest API Post Requests
+	 */
+	public SensorMapping(){
+		System.out.println("SensorMapping() Constructor here");
+		setSensor_id(100);
+		setSensor_name("hundredth sensor");
+	}
+	
+	public SensorMapping(Integer sensor_id,String sensor_name){
+		System.out.println("SensorMapping(id,name) Constructor here with id="+sensor_id+" ,name = "+sensor_name);
+		setSensor_id(sensor_id);
+		setSensor_name(sensor_name);
+	}
+	
 	private static final long serialVersionUID = 1L;
 	
 	private Integer sensor_id;

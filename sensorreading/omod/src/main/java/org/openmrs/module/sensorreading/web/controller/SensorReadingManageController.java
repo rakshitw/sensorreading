@@ -13,7 +13,6 @@
  */
 package org.openmrs.module.sensorreading.web.controller;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;

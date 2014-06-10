@@ -3,18 +3,18 @@ package org.openmrs.module.sensorreading.rest.resource;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.sensorreading.SensorMapping;
 import org.openmrs.module.sensorreading.api.SensorMappingService;
-import org.openmrs.module.sensorreading.rest.controller.SensorReadingRestController;
+//import org.openmrs.module.sensorreading.rest.controller.SensorReadingRestController;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
-//import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.FullRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DataDelegatingCrudResource;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
+//import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentation;
 
-@Resource(name = RestConstants.VERSION_1 + SensorReadingRestController.SensorReading_REST_NAMESPACE + "/sm", supportedClass = SensorMapping.class, supportedOpenmrsVersions = "1.*.*")
+@Resource(name = RestConstants.VERSION_1 + "/sensor" + "/sm", supportedClass = SensorMapping.class, supportedOpenmrsVersions = "1.*.*")
 public class SensorMappingResource extends DataDelegatingCrudResource<SensorMapping> {
 
 	@Override
@@ -72,4 +72,16 @@ public class SensorMappingResource extends DataDelegatingCrudResource<SensorMapp
 		// TODO Auto-generated method stub
 		System.out.println("New Request in SensorMapping purge which is not defined yet");
 	}	
+	@Override
+	 public DelegatingResourceDescription getCreatableProperties() {
+	 	DelegatingResourceDescription description = new DelegatingResourceDescription();
+	 	description.addRequiredProperty("sensor_id");
+	 	description.addRequiredProperty("sensor_name");
+	 	return description;
+	 }
+	
+	@Override
+	 public DelegatingResourceDescription getUpdatableProperties() {
+	 	return getCreatableProperties();
+	 }
 }
