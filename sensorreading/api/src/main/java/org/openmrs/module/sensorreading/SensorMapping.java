@@ -33,8 +33,6 @@ public class SensorMapping extends BaseOpenmrsData implements Serializable {
 	 */
 	public SensorMapping(){
 		System.out.println("SensorMapping() Constructor here");
-		setSensor_id(100);
-		setSensor_name("hundredth sensor");
 	}
 	
 	public SensorMapping(Integer sensor_id,String sensor_name){

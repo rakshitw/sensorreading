@@ -3,7 +3,7 @@ package org.openmrs.module.sensorreading.rest.resource;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.sensorreading.SensorReading;
 import org.openmrs.module.sensorreading.api.SensorReadingService;
-import org.openmrs.module.sensorreading.rest.controller.SensorReadingRestController;
+//import org.openmrs.module.sensorreading.rest.controller.SensorReadingRestController;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
@@ -14,7 +14,7 @@ import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceD
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 //import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentation;
 
-@Resource(name = RestConstants.VERSION_1 + SensorReadingRestController.SensorReading_REST_NAMESPACE + "/sr", supportedClass = SensorReading.class, supportedOpenmrsVersions = "1.*.*")
+@Resource(name = RestConstants.VERSION_1 + "/sensor" + "/sr", supportedClass = SensorReading.class, supportedOpenmrsVersions = "1.*.*")
 public class SensorReadingResource extends DataDelegatingCrudResource<SensorReading> {
 
 	@Override
@@ -49,7 +49,7 @@ public class SensorReadingResource extends DataDelegatingCrudResource<SensorRead
 			description.addProperty("observation",Representation.FULL);
 			description.addProperty("patient", Representation.FULL);
 			description.addProperty("encounter",Representation.FULL);
-			description.addProperty("encounter",Representation.FULL);
+			description.addProperty("date",Representation.FULL);
 			description.addSelfLink();			
 			return description;
 		} else {
@@ -58,7 +58,7 @@ public class SensorReadingResource extends DataDelegatingCrudResource<SensorRead
 			description.addProperty("observation",Representation.FULL);
 			description.addProperty("patient", Representation.FULL);
 			description.addProperty("encounter",Representation.FULL);
-			description.addProperty("encounter",Representation.FULL);
+			description.addProperty("date",Representation.FULL);
 			description.addSelfLink();
 			description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
 			return description;
@@ -89,4 +89,23 @@ public class SensorReadingResource extends DataDelegatingCrudResource<SensorRead
 		// TODO Auto-generated method stub
 		System.out.println("New Request in SensorReading purge which is not defined yet");
 	}	
+	
+	@Override
+	 public DelegatingResourceDescription getCreatableProperties() {
+		System.out.println("New Request in SensorReading getCreatableProperties");
+	 	DelegatingResourceDescription description = new DelegatingResourceDescription();
+	 	description.addRequiredProperty("encounter_id");
+	 	description.addRequiredProperty("sensor");
+	 	description.addRequiredProperty("observation");
+	 	description.addRequiredProperty("patient");
+	 	description.addRequiredProperty("encounter");
+	 	description.addRequiredProperty("date");	 	
+	 	return description;
+	 }
+	
+	@Override
+	 public DelegatingResourceDescription getUpdatableProperties() {
+		System.out.println("New Request in SensorReading getUpdatableProperties");
+	 	return getCreatableProperties();
+	 }
 }

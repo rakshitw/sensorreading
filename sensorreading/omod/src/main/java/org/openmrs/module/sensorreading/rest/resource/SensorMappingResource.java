@@ -74,6 +74,7 @@ public class SensorMappingResource extends DataDelegatingCrudResource<SensorMapp
 	}	
 	@Override
 	 public DelegatingResourceDescription getCreatableProperties() {
+		System.out.println("New Request in SensorMapping getCreatableProperties");
 	 	DelegatingResourceDescription description = new DelegatingResourceDescription();
 	 	description.addRequiredProperty("sensor_id");
 	 	description.addRequiredProperty("sensor_name");
@@ -82,6 +83,7 @@ public class SensorMappingResource extends DataDelegatingCrudResource<SensorMapp
 	
 	@Override
 	 public DelegatingResourceDescription getUpdatableProperties() {
+		System.out.println("New Request in SensorMapping getUpdatableProperties");
 	 	return getCreatableProperties();
 	 }
 }

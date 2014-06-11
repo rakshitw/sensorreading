@@ -3,7 +3,7 @@ package org.openmrs.module.sensorreading.rest.resource;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.sensorreading.SensorConceptMapping;
 import org.openmrs.module.sensorreading.api.SensorConceptMappingService;
-import org.openmrs.module.sensorreading.rest.controller.SensorReadingRestController;
+//import org.openmrs.module.sensorreading.rest.controller.SensorReadingRestController;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
@@ -14,7 +14,7 @@ import org.openmrs.module.webservices.rest.web.resource.impl.DataDelegatingCrudR
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
-@Resource(name = RestConstants.VERSION_1 + SensorReadingRestController.SensorReading_REST_NAMESPACE + "/scm", supportedClass = SensorConceptMapping.class, supportedOpenmrsVersions = "1.*.*")
+@Resource(name = RestConstants.VERSION_1 + "/sensor" + "/scm", supportedClass = SensorConceptMapping.class, supportedOpenmrsVersions = "1.*.*")
 public class SensorConceptMappingResource extends DataDelegatingCrudResource<SensorConceptMapping> {
 
 	@Override
@@ -71,4 +71,19 @@ public class SensorConceptMappingResource extends DataDelegatingCrudResource<Sen
 		// TODO Auto-generated method stub
 		System.out.println("New Request in SensorConceptMappingResource purge which is not defined yet");
 	}	
+	
+	@Override
+	 public DelegatingResourceDescription getCreatableProperties() {
+		System.out.println("New Request in SensorConceptMappingResource getCreatableProperties");
+	 	DelegatingResourceDescription description = new DelegatingResourceDescription();
+	 	description.addRequiredProperty("sensor");
+	 	description.addRequiredProperty("concepts");
+	 	return description;
+	 }
+	
+	@Override
+	 public DelegatingResourceDescription getUpdatableProperties() {
+		System.out.println("New Request in SensorConceptMappingResource getUpdatableProperties");
+	 	return getCreatableProperties();
+	 }
 }

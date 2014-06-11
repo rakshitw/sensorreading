@@ -14,11 +14,9 @@
 package org.openmrs.module.sensorreading;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Set;
 
 import org.openmrs.BaseOpenmrsData;
-import org.openmrs.BaseOpenmrsObject;
 import org.openmrs.Concept;
 
 /**
@@ -36,6 +34,17 @@ public class SensorConceptMapping extends BaseOpenmrsData implements Serializabl
 	
 	private SensorMapping sensor;
 	private Set<Concept> concepts ;
+	
+	public SensorConceptMapping(){
+		System.out.println("SensorConceptMapping() Constructor here");
+	}
+	
+	public SensorConceptMapping(SensorMapping sensor,Set<Concept> concepts){
+		System.out.println("SensorConceptMapping(sensor,concepts) Constructor here with id="+sensor.getId());
+		setSensor(sensor);
+		setConcepts(concepts);
+	}
+		
 	@Override
 	public Integer getId() {
 		// TODO Auto-generated method stub

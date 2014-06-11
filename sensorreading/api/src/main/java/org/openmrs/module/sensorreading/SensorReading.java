@@ -17,7 +17,6 @@ import java.io.Serializable;
 import java.util.Date;
 
 import org.openmrs.BaseOpenmrsData;
-import org.openmrs.BaseOpenmrsObject;
 import org.openmrs.Encounter;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
@@ -41,6 +40,21 @@ public class SensorReading extends BaseOpenmrsData implements Serializable {
 	private Patient patient;
 	private Encounter encounter;
 	private Date date;
+	
+	public SensorReading(){
+		System.out.println("SensorReading() Constructor here");
+	}
+	
+	public SensorReading(Integer encounter_id,SensorMapping sensor,Obs observation,Patient patient,Encounter encounter,Date date){
+		System.out.println("SensorReading(with params) Constructor here with Encounter id="+encounter_id);
+		setEncounter_id(encounter_id);
+		setSensor(sensor);
+		setObservation(observation);
+		setPatient(patient);
+		setEncounter(encounter);
+		setDate(date);
+	}
+	
 	public Encounter getEncounter() {
 		return encounter;
 	}
