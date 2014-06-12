@@ -13,9 +13,10 @@
  */
 package org.openmrs.module.sensorreading.api;
 
+import java.util.List;
+
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.sensorreading.SensorMapping;
-import org.openmrs.module.sensorreading.SensorReading;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -33,5 +34,5 @@ public interface SensorMappingService extends OpenmrsService {
      public SensorMapping saveSensorMapping(SensorMapping sensorMapping);
      public SensorMapping retrieveSensorMapping(int sensor_id);
      public SensorMapping deleteSenorMapping(SensorMapping sensorMapping);
-	
+     public List<SensorMapping> getAllSensorMappings();
 }

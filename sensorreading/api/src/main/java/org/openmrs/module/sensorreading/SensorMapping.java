@@ -71,8 +71,5 @@ public class SensorMapping extends BaseOpenmrsData implements Serializable {
 
 	public void setSensor_id(Integer sensor_id) {
 		this.sensor_id = sensor_id;
-	}
-
-
-	
+	}	
 }

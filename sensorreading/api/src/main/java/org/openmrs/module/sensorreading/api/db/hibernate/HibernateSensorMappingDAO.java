@@ -13,12 +13,15 @@
  */
 package org.openmrs.module.sensorreading.api.db.hibernate;
 
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.SessionFactory;
 import org.openmrs.module.sensorreading.SensorMapping;
 import org.openmrs.module.sensorreading.api.db.SensorMappingDAO;
 import org.openmrs.module.sensorreading.api.db.SensorReadingDAO;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * It is a default implementation of  {@link SensorReadingDAO}.
@@ -59,5 +62,9 @@ public class HibernateSensorMappingDAO implements SensorMappingDAO {
 		return sensorMapping;
 	}
 
-	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<SensorMapping> getAll() {
+		return (List<SensorMapping>) sessionFactory.getCurrentSession().createCriteria(SensorMapping.class).list();
+	}
 }

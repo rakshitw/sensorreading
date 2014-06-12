@@ -28,4 +28,5 @@ public interface SensorMappingDAO {
 	public SensorMapping setSensorMapping(SensorMapping sensorMapping);
 	public SensorMapping getSensorMapping(int sensor_id);
 	public SensorMapping deleteSensorMapping(SensorMapping sensorMapping);
+	List<SensorMapping> getAll();
 }
