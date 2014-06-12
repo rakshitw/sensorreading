@@ -3,16 +3,18 @@ package org.openmrs.module.sensorreading.rest.resource;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.sensorreading.SensorConceptMapping;
 import org.openmrs.module.sensorreading.api.SensorConceptMappingService;
-//import org.openmrs.module.sensorreading.rest.controller.SensorReadingRestController;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
-//import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.FullRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
+import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.DataDelegatingCrudResource;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
+import org.openmrs.module.webservices.rest.web.resource.impl.NeedsPaging;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
+//import org.openmrs.module.sensorreading.rest.controller.SensorReadingRestController;
+//import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentation;
 
 @Resource(name = RestConstants.VERSION_1 + "/sensor" + "/scm", supportedClass = SensorConceptMapping.class, supportedOpenmrsVersions = "1.*.*")
 public class SensorConceptMappingResource extends DataDelegatingCrudResource<SensorConceptMapping> {
@@ -86,4 +88,11 @@ public class SensorConceptMappingResource extends DataDelegatingCrudResource<Sen
 		System.out.println("New Request in SensorConceptMappingResource getUpdatableProperties");
 	 	return getCreatableProperties();
 	 }
+
+	@Override
+	protected PageableResult doGetAll(RequestContext context) throws ResponseException {
+		System.out.println("New Request in SensorConceptMappingResourceResource doGetAll");
+		return new NeedsPaging<SensorConceptMapping>(Context.getService(SensorConceptMappingService.class).getAllSensorConceptMappings(), context);
+	}
+
 }

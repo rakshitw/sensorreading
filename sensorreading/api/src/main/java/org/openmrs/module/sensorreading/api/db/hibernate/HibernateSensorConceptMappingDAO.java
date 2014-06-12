@@ -72,6 +72,7 @@ public class HibernateSensorConceptMappingDAO implements SensorConceptMappingDAO
 		SensorMapping sm = Context.getService(SensorMappingService.class).retrieveSensorMapping(sensor_id);
 		Query conceptQuery = sessionFactory.getCurrentSession().createQuery("select E.concept from SensorConceptUtil E WHERE E.sensor = :userValue");
 		conceptQuery.setParameter("userValue",sm);
+		@SuppressWarnings("unchecked")
 		List<Concept> conceptList = conceptQuery.list();
 		Set<Concept> conceptSet = new HashSet<Concept>();
 		for(Concept concept_element : conceptList)
@@ -102,6 +103,16 @@ public class HibernateSensorConceptMappingDAO implements SensorConceptMappingDAO
 		}
 		return sensorConceptMapping;
 	}
-
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<SensorConceptMapping> getAll() {
+		System.out.println("New Request in HibernateSensorConceptMappingDAO getAll");
+		List<SensorConceptMapping> list = (List<SensorConceptMapping>) sessionFactory.getCurrentSession().createCriteria(SensorConceptMapping.class).list();
+		for (SensorConceptMapping i : list){
+			System.out.println("sensor"+i.getSensor().getSensor_name());
+		}
+		return list;
+	}
 	
 }

@@ -21,7 +21,6 @@ import org.hibernate.SessionFactory;
 import org.openmrs.module.sensorreading.SensorMapping;
 import org.openmrs.module.sensorreading.api.db.SensorMappingDAO;
 import org.openmrs.module.sensorreading.api.db.SensorReadingDAO;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * It is a default implementation of  {@link SensorReadingDAO}.

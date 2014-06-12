@@ -13,6 +13,8 @@
  */
 package org.openmrs.module.sensorreading.api;
 
+import java.util.List;
+
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.sensorreading.SensorConceptMapping;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,5 +34,5 @@ public interface SensorConceptMappingService extends OpenmrsService {
      public SensorConceptMapping saveSensorConceptMapping(SensorConceptMapping sensorConceptMapping);
      public SensorConceptMapping retrieveSensorMapping(int sensor_id);
      public SensorConceptMapping deleteSenorMapping(SensorConceptMapping sensorConceptMapping);
-	
+     public List<SensorConceptMapping> getAllSensorConceptMappings();
 }

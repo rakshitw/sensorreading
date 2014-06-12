@@ -70,4 +70,10 @@ public class HibernateSensorReadingDAO implements SensorReadingDAO {
 		 sessionFactory.getCurrentSession().delete(sensorReading);	
 		 return sensorReading;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<SensorReading> getAll() {
+		return (List<SensorReading>) sessionFactory.getCurrentSession().createCriteria(SensorReading.class).list();
+	}
 }

@@ -29,4 +29,5 @@ public interface SensorReadingDAO {
 	public SensorReading getSensorValue(Integer encounter_id);
 	public SensorReading deleteSensorReading(SensorReading sensorReading);
 	public List<SensorReading> getReadingByPatient(Patient patient);
+	public List<SensorReading> getAll();
 }
