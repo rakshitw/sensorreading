@@ -13,6 +13,8 @@
  */
 package org.openmrs.module.sensorreading.api.impl;
 
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.impl.BaseOpenmrsService;
@@ -64,6 +66,11 @@ public class SensorConceptMappingServiceImpl extends BaseOpenmrsService implemen
 			SensorConceptMapping sensorConceptMapping) {
 		// TODO Auto-generated method stub
 		return dao.deleteSensorConceptMapping(sensorConceptMapping);
+	}
+
+	@Override
+	public List<SensorConceptMapping> getAll() {
+		return dao.getAllMapping();
 	}
 
 
