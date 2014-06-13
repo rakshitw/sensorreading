@@ -19,9 +19,13 @@ import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.openmrs.Concept;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterRole;
@@ -37,11 +41,14 @@ import org.openmrs.module.sensorreading.SensorReading;
 import org.openmrs.module.sensorreading.api.SensorConceptMappingService;
 import org.openmrs.module.sensorreading.api.SensorMappingService;
 import org.openmrs.module.sensorreading.api.SensorReadingService;
+import org.openmrs.module.webservices.rest.web.response.ResponseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -52,6 +59,57 @@ public class  SensorReadingManageController {
 	
 	protected final Log log = LogFactory.getLog(getClass());
 	
+	public void logger(String post, HttpServletRequest request, HttpServletResponse response){
+		System.out.println("request: "+request);
+		System.out.println("request getContentType : "+request.getContentType());
+		System.out.println("response : "+response);
+		System.out.println("String post: "+post);
+	}
+	
+	@RequestMapping(value = "/module/sensorreading/newr", method = RequestMethod.POST)
+	@ResponseBody
+	public Object newr(@RequestBody String post, HttpServletRequest request, HttpServletResponse response) throws ResponseException, JSONException {
+		logger(post,request,response);
+		JSONObject header = new JSONObject(post);
+		System.out.println(header);
+		return "hi";
+	}
+	
+	/*
+	 * Creates/Appends Sensor Concept Mappings using JSON Payload like,
+	 * {"sensor":"12","concepts":["5010","5050"]}
+	 * Goes in Internal Server Error , if invalid details or resubmission of existing sensor,concept entry in table
+	 */
+	@RequestMapping(value = "/module/sensorreading/scm", method = RequestMethod.POST)
+	@ResponseBody
+	public Object scm_creator(@RequestBody String post, HttpServletRequest request, HttpServletResponse response) throws ResponseException, JSONException {
+		System.out.println("New Request in SensorReadingManageController scm_creator");
+		logger(post,request,response);
+		JSONObject header = new JSONObject(post);
+		String sensor_key = "sensor";
+		String concepts_key = "concepts";
+		
+		SensorConceptMapping scm = new SensorConceptMapping();
+		
+		Integer id = Integer.parseInt((String) header.get(sensor_key));
+		SensorMapping sm = Context.getService(SensorMappingService.class).retrieveSensorMapping(id);
+		System.out.println("Setting Sensor as : "+sm.getSensor_name());
+		scm.setSensor(sm);
+		
+		Set<Concept> concepts = new HashSet<Concept>();
+		JSONArray jArray = header.getJSONArray(concepts_key);
+		for (int it = 0 ; it < jArray.length(); it++) {
+			Concept concept = (Concept)Context.getConceptService().getConcept(Integer.parseInt( (String) jArray.get(it) ));
+			System.out.println("Adding Concept : "+concept.getDisplayString());
+			concepts.add(concept);
+        }
+		scm.setConcepts(concepts);
+		
+		System.out.println("Final SensorConceptMapping as : "+scm);
+		Context.getService(SensorConceptMappingService.class).saveSensorConceptMapping(scm);
+		return "done";
+	}
+
 	@RequestMapping(value = "/module/sensorreading/manage", method = RequestMethod.GET)
 	public void manage(ModelMap model) {
 		model.addAttribute("user", Context.getAuthenticatedUser());

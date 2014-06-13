@@ -55,6 +55,15 @@ public class HibernateSensorConceptMappingDAO implements SensorConceptMappingDAO
 	@Override
 	public SensorConceptMapping setSensorConceptMapping(
 			SensorConceptMapping sensorConceptMapping) {
+		/* Added by Magus for Debugging */
+		System.out.println("New Request in HibernateSensorConceptMappingDAO setSensorConceptMapping");
+		System.out.println("Sensor: "+sensorConceptMapping.getSensor().getSensor_name());
+		System.out.println("Concepts :");
+		for (Concept c : sensorConceptMapping.getConcepts()){
+			System.out.println(c);
+		}
+		/* Added by Magus for Debugging */
+		
 		Set<Concept> concepts =  sensorConceptMapping.getConcepts();
 		for(Concept concept : concepts){
 			SensorConceptUtil scu = new SensorConceptUtil();
