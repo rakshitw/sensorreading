@@ -57,21 +57,8 @@ public class SensorReading extends BaseOpenmrsData implements Serializable {
 		System.out.println("SensorReading() Constructor here");
 	}
 	
-	public SensorReading(Integer encounter_id,SensorMapping sensor,Obs observation,Patient patient,Encounter encounter,Date date){
-		System.out.println("SensorReading(with params) Constructor here with Encounter id="+encounter_id);
-		setEncounter_id(encounter_id);
-		setSensor(sensor);
-		setObservation(observation);
-		setPatient(patient);
-		setEncounter(encounter);
-		setDate(date);
-	}
-	
 	public Encounter getEncounter() {
 		return encounter;
-	}
-	public SensorReading(){
-		//Empty constructor
 	}
 
 	public void setEncounter(Encounter encounter) {
