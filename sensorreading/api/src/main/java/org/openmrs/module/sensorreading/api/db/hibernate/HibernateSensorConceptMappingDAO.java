@@ -13,6 +13,7 @@
  */
 package org.openmrs.module.sensorreading.api.db.hibernate;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -117,11 +118,36 @@ public class HibernateSensorConceptMappingDAO implements SensorConceptMappingDAO
 	@Override
 	public List<SensorConceptMapping> getAll() {
 		System.out.println("New Request in HibernateSensorConceptMappingDAO getAll");
-		List<SensorConceptMapping> list = (List<SensorConceptMapping>) sessionFactory.getCurrentSession().createCriteria(SensorConceptMapping.class).list();
-		for (SensorConceptMapping i : list){
-			System.out.println("sensor"+i.getSensor().getSensor_name());
-		}
-		return list;
+		return getAllMapping();
 	}
+	/**
+	 * Returns the list of concept-sensor mappings 
+	 */
+	@Override
+	public List<SensorConceptMapping> getAllMapping() {
+		Query sensorConceptQuery = sessionFactory.getCurrentSession().createQuery("from SensorConceptUtil");
+		List<SensorConceptUtil> sensorConceptList = sensorConceptQuery.list();
+		System.out.println("the size of the sensorConcept list is");
+		System.out.println(sensorConceptList.size());
+		List<SensorConceptMapping> scmList = new ArrayList<SensorConceptMapping>();
+		
+		for(SensorConceptUtil sensorConceptElement : sensorConceptList)
+		{	int sensor_id = sensorConceptElement.getSensor().getSensor_id();
+			System.out.println("sensor id is DAO " + sensor_id);
+			Set<Concept> conceptSet = new HashSet<Concept>();
+			for (SensorConceptUtil sensorConceptUtilElement : sensorConceptList){
+				if (sensor_id == sensorConceptUtilElement.getSensor().getSensor_id()){
+					conceptSet.add(sensorConceptUtilElement.getConcept());
+				}
+			}
+			SensorConceptMapping scm = new SensorConceptMapping();
+			scm.setConcepts(conceptSet);
+			scm.setSensor(sensorConceptElement.getSensor());
+			scmList.add(scm);
+		}
+		
+		return scmList;
+	}
+
 	
 }

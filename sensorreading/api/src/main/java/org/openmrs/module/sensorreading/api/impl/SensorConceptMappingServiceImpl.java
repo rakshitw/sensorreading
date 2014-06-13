@@ -73,4 +73,10 @@ public class SensorConceptMappingServiceImpl extends BaseOpenmrsService implemen
 		return getDao().getAll();
 	}
 
+	@Override
+	public List<SensorConceptMapping> getAll() {
+		return dao.getAllMapping();
+	}
+
+
 }

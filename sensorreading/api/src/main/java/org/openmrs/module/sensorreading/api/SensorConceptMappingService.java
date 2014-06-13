@@ -35,4 +35,5 @@ public interface SensorConceptMappingService extends OpenmrsService {
      public SensorConceptMapping retrieveSensorMapping(int sensor_id);
      public SensorConceptMapping deleteSenorMapping(SensorConceptMapping sensorConceptMapping);
      public List<SensorConceptMapping> getAllSensorConceptMappings();
+     public List<SensorConceptMapping> getAll();
 }

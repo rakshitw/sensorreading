@@ -29,5 +29,9 @@ public interface SensorConceptMappingDAO {
 	public SensorConceptMapping getSensorConceptMapping(int sensor_id);
 	//TODO check this method
 	public SensorConceptMapping deleteSensorConceptMapping(SensorConceptMapping sensorConceptMapping);
+
 	public List<SensorConceptMapping> getAll();
+
+	public List<SensorConceptMapping> getAllMapping();
+
 }
