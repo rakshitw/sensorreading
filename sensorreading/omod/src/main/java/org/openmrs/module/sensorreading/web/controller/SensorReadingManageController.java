@@ -77,7 +77,7 @@ public class  SensorReadingManageController {
 	}
 	
 	/*
-	 * Creates/Appends Sensor Concept Mappings using JSON Payload like,
+	 * Creates/Appends Sensor Readings using JSON Payload like,
 	 * POST /openmrs/module/sensorreading/sr.form
 	 * {"sensor":"12","patient":"12","readings":{"5090":"170","5092":"10"}}
 	 * Integer sensor,Integer patient,concept_id : value
