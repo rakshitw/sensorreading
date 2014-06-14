@@ -15,6 +15,7 @@ package org.openmrs.module.sensorreading.web.controller;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -77,7 +78,83 @@ public class  SensorReadingManageController {
 	
 	/*
 	 * Creates/Appends Sensor Concept Mappings using JSON Payload like,
-	 * {"sensor":"12","concepts":["5010","5050"]}
+	 * POST /openmrs/module/sensorreading/sr.form
+	 * {"sensor":"12","patient":"12","readings":{"5090":"170","5092":"10"}}
+	 * Integer sensor,Integer patient,concept_id : value
+	 * Date : For Now Current Time
+	 * Provider : Super User
+	 * Location : Not Filled
+	 * issue: Reading Values can be anything .. outsource observation?
+	 */
+	@RequestMapping(value = "/module/sensorreading/sr", method = RequestMethod.POST)
+	@ResponseBody
+	public Object sr_creator(@RequestBody String post, HttpServletRequest request, HttpServletResponse response) throws ResponseException, JSONException {
+		System.out.println("New Request in SensorReadingManageController sr_creator");
+		logger(post,request,response);
+		JSONObject header = new JSONObject(post);
+		String sensor_key = "sensor";
+		String patient_key = "patient";
+		String readings_key = "readings";
+
+		SensorReading sensorReading = new SensorReading();
+		
+		// Setting Sensor as Per Request Header
+		Integer sensor_id = Integer.parseInt((String) header.get(sensor_key));
+		SensorMapping sensor = (SensorMapping)Context.getService(SensorMappingService.class).retrieveSensorMapping(sensor_id);
+		sensorReading.setSensor(sensor);
+
+		// Needed for Encounter
+		Date d = new Date(System.currentTimeMillis());
+		sensorReading.setDate(d);
+
+		// Needed for Encounter
+		Integer patient_id = Integer.parseInt((String) header.get(patient_key));
+		Patient patient = (Patient) Context.getPatientService().getPatient(patient_id);
+		sensorReading.setPatient(patient);
+
+		// Creating New Encounter for given patientId
+		Encounter enc = new Encounter();
+		enc.setEncounterDatetime(d);
+		enc.setPatient(patient);
+		enc.setEncounterType((EncounterType)Context.getEncounterService().getEncounterType(1));
+		List<Provider> provider = (List<Provider> )Context.getProviderService().getAllProviders();
+		EncounterRole er = (EncounterRole)Context.getEncounterService().getEncounterRole(1);
+		enc.setProvider((EncounterRole)Context.getEncounterService().getEncounterRole(1),(Provider) Context.getProviderService().getProvider(1));
+		Encounter enc_formed = (Encounter)Context.getEncounterService().saveEncounter(enc);
+		sensorReading.setEncounter_id(enc_formed.getEncounterId());
+		sensorReading.setEncounter(enc_formed);
+		
+		// Needed for Observation
+		Person person = (Person) Context.getPatientService().getPatient(patient_id);
+
+		// Creating New Observation for given patientId's Persion with given ConceptId
+		JSONObject jObject = header.getJSONObject(readings_key);
+		Iterator<?> keys = jObject.keys();
+
+        while( keys.hasNext() ){
+            String key = (String)keys.next();
+            Integer concept_id = Integer.parseInt(key);
+            Integer value = Integer.parseInt((String) jObject.get(key));
+            System.out.println("Creating Reading for Concept "+ concept_id+" is :"+value);            
+            Obs obs = new Obs();
+			obs.setPerson(person);
+			Concept concept = (Concept)Context.getConceptService().getConcept(concept_id);
+			obs.setObsDatetime(d);
+			obs.setConcept(concept);
+			obs.setValueNumeric((double) value);
+			Obs obs_formed = (Obs)Context.getObsService().saveObs(obs, "");
+			sensorReading.setObservation(obs_formed);
+        }	
+
+		Context.getService(SensorReadingService.class).saveSensorReading(sensorReading);
+		
+		return "done!";
+	}
+	
+	/*
+	 * Creates/Appends Sensor Concept Mappings using JSON Payload like,
+	 * POST /openmrs/module/sensorreading/scm.form
+	 * {"sensor":"12","concepts":["1011","1012"]}
 	 * Goes in Internal Server Error , if invalid details or resubmission of existing sensor,concept entry in table
 	 */
 	@RequestMapping(value = "/module/sensorreading/scm", method = RequestMethod.POST)
@@ -106,8 +183,8 @@ public class  SensorReadingManageController {
 		scm.setConcepts(concepts);
 		
 		System.out.println("Final SensorConceptMapping as : "+scm);
-		Context.getService(SensorConceptMappingService.class).saveSensorConceptMapping(scm);
-		return "done";
+		return Context.getService(SensorConceptMappingService.class).saveSensorConceptMapping(scm);
+		//return "done";
 	}
 
 	@RequestMapping(value = "/module/sensorreading/manage", method = RequestMethod.GET)
