@@ -32,7 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public interface SensorConceptMappingService extends OpenmrsService {
      public SensorConceptMapping saveSensorConceptMapping(SensorConceptMapping sensorConceptMapping);
-     public SensorConceptMapping retrieveSensorMapping(int sensor_id);
-     public SensorConceptMapping deleteSenorMapping(SensorConceptMapping sensorConceptMapping);
+     public SensorConceptMapping retrieveSensorConceptMapping(int sensor_id);
+     public SensorConceptMapping deleteSensorConceptMapping(SensorConceptMapping sensorConceptMapping);
      public List<SensorConceptMapping> getAll();
 }

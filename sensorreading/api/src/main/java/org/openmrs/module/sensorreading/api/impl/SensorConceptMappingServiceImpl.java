@@ -56,13 +56,13 @@ public class SensorConceptMappingServiceImpl extends BaseOpenmrsService implemen
 	}
 
 	@Override
-	public SensorConceptMapping retrieveSensorMapping(int sensor_id) {
+	public SensorConceptMapping retrieveSensorConceptMapping(int sensor_id) {
 		// TODO Auto-generated method stub
 		return dao.getSensorConceptMapping(sensor_id);
 	}
 
 	@Override
-	public SensorConceptMapping deleteSenorMapping(
+	public SensorConceptMapping deleteSensorConceptMapping(
 			SensorConceptMapping sensorConceptMapping) {
 		// TODO Auto-generated method stub
 		return dao.deleteSensorConceptMapping(sensorConceptMapping);
