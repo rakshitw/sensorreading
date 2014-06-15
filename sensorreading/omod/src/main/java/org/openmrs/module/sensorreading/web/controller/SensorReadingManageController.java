@@ -37,6 +37,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.sensorreading.SensorConceptMapping;
 import org.openmrs.module.sensorreading.SensorMapping;
 import org.openmrs.module.sensorreading.SensorReading;
+import org.openmrs.module.sensorreading.api.SensorMappingService;
 import org.openmrs.module.sensorreading.api.SensorConceptMappingService;
 import org.openmrs.module.sensorreading.api.SensorMappingService;
 import org.openmrs.module.sensorreading.api.SensorReadingService;
@@ -111,8 +112,6 @@ public class  SensorReadingManageController {
 			HttpServletRequest request) {
 		ModelAndView model = new ModelAndView();
 		
-		//Integer patientId = Integer.parseInt(request.getParameter("patientId"));		
-		//Patient patient = 
 		System.out.println("\n\nthe patient id id  " + patientId);
 		Patient patient = (Patient) Context.getPatientService().getPatient(patientId);
 		
@@ -123,11 +122,9 @@ public class  SensorReadingManageController {
 		 */
 		
 		Encounter enc = new Encounter();
-//		enc.setEncounterId(encounterId);
 		Date d = new Date(System.currentTimeMillis());
 		enc.setEncounterDatetime(d);
 		enc.setPatient(patient);
-//		List<EncounterType> et = (List<EncounterType>)Context.getEncounterService().getAllEncounterTypes();
 		
 		
 		enc.setEncounterType((EncounterType)Context.getEncounterService().getEncounterType(1));
@@ -140,29 +137,46 @@ public class  SensorReadingManageController {
 		enc.setProvider((EncounterRole)Context.getEncounterService().getEncounterRole(1),(Provider) Context.getProviderService().getProvider(1));
 		Person person = (Person) Context.getPatientService().getPatient(patientId);
 		
-		Obs obs = new Obs();
-//		obs.setObsId(1012);
-		obs.setPerson(person);
-		Concept concept = (Concept)Context.getConceptService().getConcept(5090);
-		obs.setObsDatetime(d);;
-		obs.setConcept(concept);
-		try {
-			obs.setValueAsString("173");
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		/*
+		 * Setting multiple concepts by creating multiple observations and
+		 * adding it to encounter everytime.
+		 */
+		SensorConceptMapping sensorConcepts = (SensorConceptMapping)Context.getService(SensorConceptMappingService.class).retrieveSensorConceptMapping(12);
+		Set<Concept> retrievedConcepts = sensorConcepts.getConcepts();
+		int counter = 0;
+		Set<Obs> observations = new HashSet<Obs>();
+		
+		for (Concept retrievedElement : retrievedConcepts){
+				System.out.println("in loop");
+				Obs obs = new Obs();
+				obs.setPerson(person);
+				//change 5090 by retreiveElement.getConceptId();
+				Concept concept = (Concept)Context.getConceptService().getConcept(5090);
+				obs.setObsDatetime(d);
+				obs.setConcept(concept);
+				int height = counter + 170;
+				String val = Integer.toString(height);
+				System.out.println("heigh is " + val);
+				try { 
+					obs.setValueAsString(val);
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				counter++;
+				enc.addObs(obs);
+				observations.add(obs);
 		}
-
-		enc.addObs(obs);
+		
+		
+		
 		Encounter enc_formed = (Encounter)Context.getEncounterService().saveEncounter(enc);
-		Obs obs_formed = (Obs)Context.getObsService().getObsByUuid(obs.getUuid());
 		SensorReading sensorReading = new SensorReading();
-//		sensorReading.setEncounter_id(enc_formed.getEncounterId());
 		sensorReading.setPatient(patient);
 		SensorMapping sensor = (SensorMapping)Context.getService(SensorMappingService.class).retrieveSensorMapping(10);
 		sensorReading.setSensor(sensor);
 		sensorReading.setEncounter(enc_formed);
-		sensorReading.setObservation(obs_formed);
+		sensorReading.setObservations(observations);
 		sensorReading.setDate(d);
 		
 		
@@ -181,7 +195,6 @@ public class  SensorReadingManageController {
 		SensorMapping sm = (SensorMapping)Context.getService(SensorMappingService.class).retrieveSensorMapping(12);
 		
 		System.out.println("done" + sm.getSensor_name());
-		Context.getService(SensorConceptMappingService.class).retrieveSensorMapping(12);
 		
 		/*
 		 * Adding concepts to a sensor
@@ -191,13 +204,7 @@ public class  SensorReadingManageController {
 		Concept concept2 = (Concept)Context.getConceptService().getConcept(5092);
 		Set<Concept> concepts = new HashSet<Concept>();
 		
-		List<SensorConceptMapping> scmList = (List<SensorConceptMapping>)Context.getService(SensorConceptMappingService.class).getAll();
-		for (SensorConceptMapping scmElement : scmList ){
-			System.out.println("sensor is " + scmElement.getSensor().getSensor_id());
-			for (Concept cp : scmElement.getConcepts()){
-				System.out.println("concepts for scmElement.getSensor().getSensor_id() is " + cp.getConceptId());
-			}
-		}
+
 		/*
 		 * Commented out as it requires new pair every time(composite id)
 		 */
