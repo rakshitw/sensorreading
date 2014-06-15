@@ -48,7 +48,7 @@ public class SensorReading extends BaseOpenmrsObject implements Serializable {
 	
 	private Integer encounter_id;
 	private SensorMapping sensor;
-	private Obs observation;
+	private Set<Obs> observations;
 	private Patient patient;
 	private Encounter encounter;
 	private Date date;
@@ -68,12 +68,7 @@ public class SensorReading extends BaseOpenmrsObject implements Serializable {
 	public void setEncounter_id(Integer encounter_id) {
 		this.encounter_id = encounter_id;
 	}
-	public Obs getObservation() {
-		return observation;
-	}
-	public void setObservation(Obs observation) {
-		this.observation = observation;
-	}
+
 	public Patient getPatient() {
 		return patient;
 	}
@@ -101,6 +96,12 @@ public class SensorReading extends BaseOpenmrsObject implements Serializable {
 	}
 	public void setDate(Date date) {
 		this.date = date;
+	}
+	public Set<Obs> getObservations() {
+		return observations;
+	}
+	public void setObservations(Set<Obs> observations) {
+		this.observations = observations;
 	}
 	
 	

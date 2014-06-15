@@ -106,6 +106,7 @@ public class HibernateSensorConceptMappingDAO implements SensorConceptMappingDAO
 	/**
 	 * Returns the list of concept-sensor mappings 
 	 */
+	//TODO delete print statements
 	@Override
 	public List<SensorConceptMapping> getAllMapping() {
 		Query sensorConceptQuery = sessionFactory.getCurrentSession().createQuery("from SensorConceptUtil");
