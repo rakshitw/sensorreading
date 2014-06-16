@@ -17,7 +17,7 @@
 	</class>
 -->
 
-<class name="SensorReading" table="sensor_reading3">
+<class name="SensorReading" table="sensor_reading4">
     
 		<!--  Making encounter id as foreign key, derived from encounter -->
 		<id name="encounter_id" type="java.lang.Integer">
@@ -36,9 +36,9 @@
 		    <column name="sensor_id" />
 		</many-to-one>
 		    
-		<many-to-one name="observation" class="org.openmrs.Obs" not-null="true">
+		<!--  <many-to-one name="observation" class="org.openmrs.Obs" not-null="true">
 			<column name="observation_id" />
-		</many-to-one>		
+		</many-to-one>		-->
 		<many-to-one name="patient" class="org.openmrs.Patient" not-null="true">
 			<column name="patient_id" />
 		</many-to-one>		

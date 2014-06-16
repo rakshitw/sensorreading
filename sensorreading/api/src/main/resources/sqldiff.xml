@@ -15,15 +15,14 @@
 
 
 	<diff>
-		<version>11.0-SNAPSHOT</version>
+		<version>13.0-SNAPSHOT</version>
 		<author>rakshit</author>
 		<date></date>
 		<description></description>
 		<sql>
 		    <!-- DROP TABLE IF EXISTS appointment; -->
-			CREATE TABLE IF NOT EXISTS sensor_reading3(
+			CREATE TABLE IF NOT EXISTS sensor_reading4(
 				encounter_id int(19) NOT NULL,
-				observation_id int(19) NOT NULL,
 				test_date date NOT NULL,
 				patient_id int(19) NOT NULL,
 				sensor_id int(19) NOT NULL,

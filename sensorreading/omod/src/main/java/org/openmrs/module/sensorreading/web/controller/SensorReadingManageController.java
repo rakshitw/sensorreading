@@ -13,6 +13,8 @@
  */
 package org.openmrs.module.sensorreading.web.controller;
 
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -28,6 +30,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openmrs.Concept;
+import org.openmrs.ConceptAnswer;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterRole;
 import org.openmrs.EncounterType;
@@ -39,6 +42,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.sensorreading.SensorConceptMapping;
 import org.openmrs.module.sensorreading.SensorMapping;
 import org.openmrs.module.sensorreading.SensorReading;
+import org.openmrs.module.sensorreading.api.SensorMappingService;
 import org.openmrs.module.sensorreading.api.SensorConceptMappingService;
 import org.openmrs.module.sensorreading.api.SensorMappingService;
 import org.openmrs.module.sensorreading.api.SensorReadingService;
@@ -243,17 +247,19 @@ public class  SensorReadingManageController {
 			HttpServletRequest request) {
 		ModelAndView model = new ModelAndView();
 		
-		//Integer patientId = Integer.parseInt(request.getParameter("patientId"));		
-		//Patient patient = 
-		//int encounterId=2451;
-		//int sensorId=1;
-		System.out.println("\n\n1 the patient id id  " + patientId);
+		System.out.println("\n\nthe patient id id  " + patientId);
 		Patient patient = (Patient) Context.getPatientService().getPatient(patientId);
 		System.out.println("2 Fetched patient name " + patient.getGivenName());
 		
+		/*
+		 * Set an encounter, make an observation, add that observation to the
+		 * encounter save the encounter. get other parameters and along with
+		 * encounter and observation form the sensorReading object and save it
+		 */
+		
 		Encounter enc = new Encounter();
 		System.out.println("3 Enc To String " +enc.toString());
-//		enc.setEncounterId(encounterId);
+
 		Date d = new Date(System.currentTimeMillis());
 		enc.setEncounterDatetime(d);
 		System.out.println("4 Date " +d.toString());
@@ -268,6 +274,12 @@ public class  SensorReadingManageController {
 		List<Provider> provider = (List<Provider> )Context.getProviderService().getAllProviders();
 		for(Provider p : provider)
 			System.out.println("6 provider is" + p.getProviderId() + p.getId() + p.getAttributes() + p.getName());
+		
+		
+		enc.setEncounterType((EncounterType)Context.getEncounterService().getEncounterType(1));
+//		List<Provider> provider = (List<Provider> )Context.getProviderService().getAllProviders();
+//		for(Provider p : provider)
+//			System.out.println("provider is" + p.getProviderId() + p.getId() + p.getAttributes() + p.getName());
 		EncounterRole er = (EncounterRole)Context.getEncounterService().getEncounterRole(1);
 		System.out.println("7 er is " +  er.getName() + er.getDescription());
 		
@@ -278,27 +290,47 @@ public class  SensorReadingManageController {
 		Person person = (Person) Context.getPatientService().getPatient(patientId);
 		System.out.println("10 person name  is " + person.getGivenName());
 		
-		Obs obs = new Obs();
-//		obs.setObsId(1012);
-		obs.setPerson(person);
-		System.out.println("11 observation person name is " + obs.getPerson().getGivenName());
-		Concept concept = (Concept)Context.getConceptService().getConcept(5090);
-		obs.setObsDatetime(d);;
-		obs.setConcept(concept);
-		obs.setValueNumeric((double) 170);
-		System.out.println("12 observation tostring is " +obs.toString());
-
-//		obs.setEncounter(enc);
-//		Context.getObsService().s
-		Obs obs_formed = (Obs)Context.getObsService().saveObs(obs, "");
+		/*
+		 * Setting multiple concepts by creating multiple observations and
+		 * adding it to encounter everytime.
+		 */
+		SensorConceptMapping sensorConcepts = (SensorConceptMapping)Context.getService(SensorConceptMappingService.class).retrieveSensorConceptMapping(12);
+		Set<Concept> retrievedConcepts = sensorConcepts.getConcepts();
+		int counter = 0;
+		Set<Obs> observations = new HashSet<Obs>();
+		
+		for (Concept retrievedElement : retrievedConcepts){
+				System.out.println("in loop");
+				Obs obs = new Obs();
+				obs.setPerson(person);
+				//change 5090 by retreiveElement.getConceptId();
+				Concept concept = (Concept)Context.getConceptService().getConcept(5090);
+				obs.setObsDatetime(d);
+				obs.setConcept(concept);
+				int height = counter + 170;
+				String val = Integer.toString(height);
+				System.out.println("heigh is " + val);
+				try { 
+					obs.setValueAsString(val);
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				counter++;
+				enc.addObs(obs);
+				observations.add(obs);
+		}
+		
+		
+		
+		Encounter enc_formed = (Encounter)Context.getEncounterService().saveEncounter(enc);
 		SensorReading sensorReading = new SensorReading();
-		sensorReading.setEncounter_id(enc_formed.getEncounterId());
 		sensorReading.setPatient(patient);
 		SensorMapping sensor = (SensorMapping)Context.getService(SensorMappingService.class).retrieveSensorMapping(10);
 		System.out.println("13 Sensor Mapping Object 10 is " +((SensorMapping)Context.getService(SensorMappingService.class).retrieveSensorMapping(10)).getSensor_name());
 		sensorReading.setSensor(sensor);
 		sensorReading.setEncounter(enc_formed);
-		sensorReading.setObservation(obs_formed);
+		sensorReading.setObservations(observations);
 		sensorReading.setDate(d);
 		System.out.println("14 Trying to Create sensorReading object as " +sensorReading.toString());
 		System.out.println("15 Transient sensorReading object is " +sensorReading.getSensor().getSensor_name()+" "+sensorReading.getEncounter().getId()+" ");
@@ -306,8 +338,10 @@ public class  SensorReadingManageController {
 		Integer encounter_id = 22;
 		SensorReading sr = (SensorReading)Context.getService(SensorReadingService.class).readSensorReading(encounter_id);
 		//System.out.println("16 Sensor Reading for Encounter id " +encounter_id + " is "+((SensorReading)Context.getService(SensorReadingService.class).readSensorReading(encounter_id)).getSensor().getSensor_name());
-		
-		System.out.println("date is " + sr.getObservation().getObsDatetime());
+		Context.getService(SensorReadingService.class).saveSensorReading(sensorReading);
+//		SensorReading sr = (SensorReading)Context.getService(SensorReadingService.class).readSensorReading(encounter_id);
+//		
+//		System.out.println("date is " + sr.getObservation().getObsDatetime());
 		SensorMapping sensorMapping = new SensorMapping();
 //		sensorMapping.setSensor_id(11);
 		sensorMapping.setSensor_name("pulse meter");
@@ -317,62 +351,24 @@ public class  SensorReadingManageController {
 		
 		System.out.println("done" + sm.getSensor_name());
 		
+		/*
+		 * Adding concepts to a sensor
+		 */
 		SensorConceptMapping sensorConceptMapping = new SensorConceptMapping();
 		sensorConceptMapping.setSensor(sm);
 		Concept concept2 = (Concept)Context.getConceptService().getConcept(5092);
 		Set<Concept> concepts = new HashSet<Concept>();
-		concepts.add(concept);
-		concepts.add(concept2);
-		sensorConceptMapping.setConcepts(concepts);
-		Context.getService(SensorConceptMappingService.class).saveSensorConceptMapping(sensorConceptMapping);
 		
-		//		System.out.println("\n\nthe gender of patient is " + patient.getGender());
-//		List<Patient> patients = (List<Patient>)Context.getPatientService().getAllPatients();
-//		System.out.println("\niterating over patients");
-//		for (Patient p : patients){
-//			System.out.println("patient id is " + p.getPatientId() + p.getGivenName());
-//		}
-		//Get the users
-//		List <User> providers =  (List<User>)Context.getUserService().getAllUsers();
-//		for (User p: providers){
-//			System.out.println(p.getUsername() + p.getUserId());
-//		}
-//		List<User> provider2 =  (List <User>) Context.getUserService().getAllUsers();
-//		for (User p : provider2){
-//			System.out.println("id = "+ p.getId() + p.getUsername()+ p.getFamilyName() + p.getDescription() + p.getRoles());
-//		}
-//		User provider = new User();
-//		provider =  (User) Context.getUserService().getUser(1);
-//		Location location = new Location();
-//		location = (Location)Context.getLocationService().getLocation(1);
-//		Date d2 = DateUtils.addHours(d, 60);
-//		Appointment appt = new Appointment();
-//		appt.setEndDatetime(d2);
-//		appt.setStartDatetime(d);
-//		appt.setPatient(patient);
-//		appt.setLocation(location);
-//		appt.setProvider(provider);
-//		appt.setId(7);
-//		Context.getService(AppointmentService.class).scheduleAppointment(appt);
-//		
+
+		/*
+		 * Commented out as it requires new pair every time(composite id)
+		 */
+//		concepts.add(concept);
+//		concepts.add(concept2);
+//		sensorConceptMapping.setConcepts(concepts);
+//		Context.getService(SensorConceptMappingService.class).saveSensorConceptMapping(sensorConceptMapping);
 		
-//		Obs obs = new Obs(patient, new Concept(5096), new Date(), new Location(1));
-//		Concept concept = Context.getConceptService().getConcept(5096);
-//		Obs obs = new Obs();
-//		obs.setPerson(patient);
-//		obs.setConcept(concept);
-////		obs.setPerson(patient);
-//		obs.setObsDatetime(visitDate);
-//		obs.setValueDatetime(d2);
-////		obs.setValueDatetime(visitDate);
-//		System.out.println("observations made");
-//		
-//		System.out.println("Date is " + d);
-//		System.out.println("observation id before saving is " + obs.getObsId());
-////			obs.setObsId(1202);
-//		obs = Context.getObsService().saveObs(obs, "because");
-//		System.out.println("observation id after saving is " + obs.getObsId());
-//		model.addObject("obs", obs);
+	
 		
 		return model;
 	}
