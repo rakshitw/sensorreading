@@ -14,24 +14,13 @@
 package org.openmrs.module.sensorreading;
 
 import java.io.Serializable;
-import java.text.ParseException;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.openmrs.BaseOpenmrsData;
-import org.openmrs.Concept;
-import org.openmrs.ConceptAnswer;
 import org.openmrs.Encounter;
-import org.openmrs.EncounterRole;
-import org.openmrs.EncounterType;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
-import org.openmrs.Person;
-import org.openmrs.Provider;
-import org.openmrs.api.context.Context;
-import org.openmrs.module.sensorreading.api.SensorConceptMappingService;
 
 /**
  * It is a model class. It should extend either {@link BaseOpenmrsObject} or {@link BaseOpenmrsMetadata}.

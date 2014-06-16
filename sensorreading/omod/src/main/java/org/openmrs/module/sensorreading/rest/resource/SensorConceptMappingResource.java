@@ -55,7 +55,7 @@ public class SensorConceptMappingResource extends DataDelegatingCrudResource<Sen
 		System.out.println("New Request in SensorConceptMappingResource getByUniqueId");
 		Integer id = Integer.parseInt(uniqueId);
 		System.out.println("sensor_id = "+uniqueId);
-		SensorConceptMapping obj = Context.getService(SensorConceptMappingService.class).retrieveSensorMapping(id);
+		SensorConceptMapping obj = Context.getService(SensorConceptMappingService.class).retrieveSensorConceptMapping(id);
 		//System.out.println("Fetched Object = "+obj.getBp_reading());
 		return obj; 
 	}
@@ -64,7 +64,7 @@ public class SensorConceptMappingResource extends DataDelegatingCrudResource<Sen
 	protected void delete(SensorConceptMapping delegate, String reason,
 		RequestContext context) throws ResponseException {
 		System.out.println("New Request in SensorConceptMappingResource delete , reason : "+reason);
-		Context.getService(SensorConceptMappingService.class).deleteSenorMapping(delegate);		
+		Context.getService(SensorConceptMappingService.class).deleteSensorConceptMapping(delegate);		
 	}
 
 	@Override

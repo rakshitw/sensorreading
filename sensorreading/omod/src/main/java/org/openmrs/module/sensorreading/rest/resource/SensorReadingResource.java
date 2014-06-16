@@ -48,7 +48,7 @@ public class SensorReadingResource extends DataDelegatingCrudResource<SensorRead
 		if (rep instanceof FullRepresentation) {
 			description.addProperty("encounter_id");
 			description.addProperty("sensor", Representation.FULL);
-			description.addProperty("observation",Representation.FULL);
+			description.addProperty("observations",Representation.FULL);
 			description.addProperty("patient", Representation.FULL);
 			description.addProperty("encounter",Representation.FULL);
 			description.addProperty("date",Representation.FULL);
@@ -57,7 +57,7 @@ public class SensorReadingResource extends DataDelegatingCrudResource<SensorRead
 		} else {
 			description.addProperty("encounter_id");
 			description.addProperty("sensor", Representation.FULL);
-			description.addProperty("observation",Representation.FULL);
+			description.addProperty("observations",Representation.FULL);
 			description.addProperty("patient", Representation.FULL);
 			description.addProperty("encounter",Representation.FULL);
 			description.addProperty("date",Representation.FULL);
@@ -73,7 +73,7 @@ public class SensorReadingResource extends DataDelegatingCrudResource<SensorRead
 		Integer id = Integer.parseInt(encounter_id);
 		System.out.println("encounter_id = "+id);
 		SensorReading obj = Context.getService(SensorReadingService.class).readSensorReading(id);
-		System.out.println("Fetched SensorReading = "+obj.getEncounter_id());
+	//	System.out.println("Fetched SensorReading = "+obj.getEncounter_id());
 		return obj; 
 	}
 
@@ -113,7 +113,7 @@ public class SensorReadingResource extends DataDelegatingCrudResource<SensorRead
 	
 	@Override
 	protected PageableResult doGetAll(RequestContext context) throws ResponseException {
-		System.out.println("New Request in SensorConceptMappingResourceResource doGetAll");
+		System.out.println("New Request in SensorReadingResource doGetAll");
 		return new NeedsPaging<SensorReading>(Context.getService(SensorReadingService.class).getAllSensorReadings(), context);
 	}
 }
