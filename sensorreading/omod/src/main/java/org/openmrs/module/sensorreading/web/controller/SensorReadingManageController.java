@@ -30,12 +30,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openmrs.Concept;
 import org.openmrs.Encounter;
+import org.openmrs.EncounterProvider;
 import org.openmrs.EncounterRole;
 import org.openmrs.EncounterType;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.Person;
 import org.openmrs.Provider;
+import org.openmrs.User;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.sensorreading.SensorConceptMapping;
 import org.openmrs.module.sensorreading.SensorMapping;
@@ -44,6 +46,7 @@ import org.openmrs.module.sensorreading.api.SensorConceptMappingService;
 import org.openmrs.module.sensorreading.api.SensorMappingService;
 import org.openmrs.module.sensorreading.api.SensorReadingService;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
+import org.openmrs.util.PrivilegeConstants;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -86,10 +89,29 @@ public class  SensorReadingManageController {
 	 * Provider : Super User
 	 * Location : Not Filled
 	 * issue: Reading Values can be anything .. outsource observation?
+	 * 
+	 * Doesn't Look at it SCM actually exists , add that validation
 	 */
 	@RequestMapping(value = "/module/sensorreading/sr", method = RequestMethod.POST)
 	@ResponseBody
 	public Object sr_creator(@RequestBody String post, HttpServletRequest request, HttpServletResponse response) throws ResponseException, JSONException {
+		Context.addProxyPrivilege(PrivilegeConstants.VIEW_PATIENTS);
+		Context.addProxyPrivilege(PrivilegeConstants.VIEW_ENCOUNTERS);
+		Context.addProxyPrivilege(PrivilegeConstants.VIEW_ENCOUNTER_TYPES);
+		Context.addProxyPrivilege(PrivilegeConstants.VIEW_ENCOUNTER_ROLES);
+		Context.addProxyPrivilege(PrivilegeConstants.VIEW_PROVIDERS);
+		Context.addProxyPrivilege(PrivilegeConstants.VIEW_CONCEPTS);
+		Context.addProxyPrivilege(PrivilegeConstants.VIEW_PERSONS);
+		Context.addProxyPrivilege(PrivilegeConstants.VIEW_VISITS);
+		Context.addProxyPrivilege(PrivilegeConstants.VIEW_USERS);
+
+		Context.addProxyPrivilege(PrivilegeConstants.MANAGE_PROVIDERS);
+		Context.addProxyPrivilege(PrivilegeConstants.MANAGE_ENCOUNTER_ROLES);
+		
+		
+		Context.addProxyPrivilege(PrivilegeConstants.ADD_OBS);
+		Context.addProxyPrivilege(PrivilegeConstants.ADD_ENCOUNTERS);
+		
 		System.out.println("New Request in SensorReadingManageController sr_creator");
 		logger(post,request,response);
 		JSONObject header = new JSONObject(post);
@@ -105,26 +127,66 @@ public class  SensorReadingManageController {
 
 		// Needed for Encounter and Sensor Reading
 		Date d = new Date(System.currentTimeMillis());
-
+		
 		// Needed for Encounter
 		Integer patient_id = Integer.parseInt((String) header.get(patient_key));
+		System.out.println("Getting Patient");
 		Patient patient = (Patient) Context.getPatientService().getPatient(patient_id);
-
+		System.out.println("Done Getting Patient");
+		
 		// Creating New Encounter for given patientId
+		System.out.println("Creating new Encounter");
 		Encounter enc = new Encounter();
+		System.out.println("Done new Encounter");
 		enc.setEncounterDatetime(d);
 		enc.setPatient(patient);
+		System.out.println("Setting EncounterType");
 		enc.setEncounterType((EncounterType)Context.getEncounterService().getEncounterType(1));
+		System.out.println("Done EncounterType");
+		
+		List<User> a = Context.getUserService().getAllUsers();
+		for(User x : a){
+			System.out.println(x.getUsername());
+			System.out.println(x);			
+		}
+		
+		System.out.println("Getting User");
+		//User u = (User) Context.getUserService().getUserByUsername("magus");
+		//TODO Change Hard coded creator to the one who actually creates
+		User u = a.get(0);
+		System.out.println("Got User : " + u + " " + u.getName()+" "+u.getUsername());
+		
+		System.out.println("Setting User");
+		enc.setCreator(u);
+		System.out.println("Done");
 		
 		//Currently not used but in future provider would be expected in header
 		//List<Provider> provider = (List<Provider> )Context.getProviderService().getAllProviders();
 		//EncounterRole er = (EncounterRole)Context.getEncounterService().getEncounterRole(1);
 		
-		enc.setProvider((EncounterRole)Context.getEncounterService().getEncounterRole(1),(Provider) Context.getProviderService().getProvider(1));
+		System.out.println("Setting ProviderType");
+		Provider aprovider = (Provider) Context.getProviderService().getProvider(1);
+		
+		EncounterProvider encpro = new EncounterProvider();
+		encpro.setCreator(u);
+		encpro.setEncounter(enc);
+		encpro.setProvider(aprovider);
+		encpro.setEncounterRole((EncounterRole)Context.getEncounterService().getEncounterRole(1));
+		
+		Set <EncounterProvider> ep_set = new HashSet<EncounterProvider>() ;
+		
+		ep_set.add(encpro);
+		enc.setEncounterProviders(ep_set);
+		
+		System.out.println("Provider is : "+aprovider+" "+aprovider.getName());
+		//enc.setProvider((EncounterRole)Context.getEncounterService().getEncounterRole(1),aprovider);
+		System.out.println("Done Setting ProviderType");
 		
 		// Needed for Observation
+		System.out.println("Getting Person");
 		Person person = (Person) Context.getPatientService().getPatient(patient_id);
-
+		System.out.println("Done Getting Person");
+		
         //New Implementation for Creating Concept and Encounter
 		/*
  		 * Setting multiple concepts by creating multiple observations and
@@ -135,30 +197,32 @@ public class  SensorReadingManageController {
 		Iterator<?> keys = jObject.keys();
 
         while( keys.hasNext() ){
-        		System.out.println("in loop");
-        		String key = (String)keys.next();
-                Integer concept_id = Integer.parseInt(key);
-                String value = (String) jObject.get(key);
-                System.out.println("Creating Reading for Concept "+ concept_id+" "+key+", as :"+value);            
-                
-                Obs obs = new Obs();
- 				obs.setPerson(person);
- 				obs.setObsDatetime(d);
- 				//Rakshit's Comment : change 5090 by retreiveElement.getConceptId();
- 				Concept concept = (Concept)Context.getConceptService().getConcept(concept_id);
- 				obs.setConcept(concept);
- 				try { 
- 					obs.setValueAsString(value);
- 				} catch (ParseException e) {
- 					// TODO Auto-generated catch block
- 					e.printStackTrace();
- 				}
- 				enc.addObs(obs);
- 				observations.add(obs);
+    		System.out.println("in loop");
+    		String key = (String)keys.next();
+            Integer concept_id = Integer.parseInt(key);
+            String value = (String) jObject.get(key);
+            System.out.println("Creating Reading for Concept "+ concept_id+" "+key+", as :"+value);            
+            
+            Obs obs = new Obs();
+            obs.setCreator(u);
+            obs.setPerson(person);
+			obs.setObsDatetime(d);
+			//Rakshit's Comment : change 5090 by retreiveElement.getConceptId();
+			Concept concept = (Concept)Context.getConceptService().getConcept(concept_id);
+			obs.setConcept(concept);
+			try { 
+				obs.setValueAsString(value);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			enc.addObs(obs);
+			observations.add(obs);
  		}
  		
  		
-       	Encounter enc_formed = (Encounter)Context.getEncounterService().saveEncounter(enc);
+// 		EncounterProvider ep_formed = (EncounterProvider)Context.getProviderService().
+		Encounter enc_formed = (Encounter)Context.getEncounterService().saveEncounter(enc);
 		
        	sensorReading.setSensor(sensor);
 		sensorReading.setDate(d);
@@ -182,6 +246,8 @@ public class  SensorReadingManageController {
 	@ResponseBody
 	public Object scm_creator(@RequestBody String post, HttpServletRequest request, HttpServletResponse response) throws ResponseException, JSONException {
 		System.out.println("New Request in SensorReadingManageController scm_creator");
+		Context.addProxyPrivilege(PrivilegeConstants.VIEW_CONCEPTS);
+		
 		logger(post,request,response);
 		JSONObject header = new JSONObject(post);
 		String sensor_key = "sensor";
@@ -196,8 +262,16 @@ public class  SensorReadingManageController {
 		
 		Set<Concept> concepts = new HashSet<Concept>();
 		JSONArray jArray = header.getJSONArray(concepts_key);
+		System.out.println(jArray);
+		System.out.println(" Starting loop total iterations "+jArray.length());
+		System.out.println(" First Item "+jArray.get(0));
 		for (int it = 0 ; it < jArray.length(); it++) {
-			Concept concept = (Concept)Context.getConceptService().getConcept(Integer.parseInt( (String) jArray.get(it) ));
+			System.out.println("This is loop iteration "+it);
+			Integer concept_id = Integer.parseInt( (String) jArray.get(it));
+			System.out.println("concept id :"+ concept_id);
+			//concept_id = 5090;
+			Concept concept = (Concept)Context.getConceptService().getConcept(concept_id);
+			System.out.println("Fetched Concept Successfully");
 			System.out.println("Adding Concept : "+concept.getDisplayString());
 			concepts.add(concept);
         }
@@ -257,6 +331,7 @@ public class  SensorReadingManageController {
 		 */
 		@RequestMapping(value = "/module/sensorreading/manage",method=RequestMethod.POST)
 		public ModelAndView processForm(
+				
 //				@ModelAttribute("patient") Patient patient,
 				@RequestParam("patientId") int patientId,
 //				@RequestParam("sensorId") int sensorId,

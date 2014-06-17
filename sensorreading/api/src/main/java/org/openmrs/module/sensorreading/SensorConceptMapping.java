@@ -54,13 +54,19 @@ public class SensorConceptMapping extends BaseOpenmrsData implements Serializabl
 		return sensor;
 	}
 	public void setSensor(SensorMapping sensor) {
+		System.out.println("Request in setSensor "+sensor.getSensor_name());
 		this.sensor = sensor;
+		System.out.println("Sensor Set Done!");
 	}
 	public Set<Concept> getConcepts() {
 		return concepts;
 	}
 	public void setConcepts(Set<Concept> concepts) {
+		System.out.println("Request in setConcepts with concepts set as : "+concepts.size());
+		System.out.println("in concept set method");
+        for (Concept c : concepts)System.out.println(c.getConceptId() + " "+c.getName());
 		this.concepts = concepts;
+		System.out.println("setConcepts Done!");
 	}
 	@Override
 	public void setId(Integer id) {
