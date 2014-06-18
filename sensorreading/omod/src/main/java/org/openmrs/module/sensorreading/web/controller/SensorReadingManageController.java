@@ -84,6 +84,7 @@ public class  SensorReadingManageController {
 	 * Creates/Appends Sensor Readings using JSON Payload like,
 	 * POST /openmrs/module/sensorreading/sr.form
 	 * {"sensor":"12","patient":"12","readings":{"5090":"170","5092":"10"}}
+	 * Changed to uuid now ^^
 	 * Integer sensor,Integer patient,concept_id : value
 	 * Date : For Now Current Time
 	 * Provider : Super User
@@ -194,21 +195,27 @@ public class  SensorReadingManageController {
  		 */
  		Set<Obs> observations = new HashSet<Obs>();
  		JSONObject jObject = header.getJSONObject(readings_key);
-		Iterator<?> keys = jObject.keys();
+		Iterator<String> keys = jObject.keys();
 
         while( keys.hasNext() ){
     		System.out.println("in loop");
-    		String key = (String)keys.next();
-            Integer concept_id = Integer.parseInt(key);
-            String value = (String) jObject.get(key);
-            System.out.println("Creating Reading for Concept "+ concept_id+" "+key+", as :"+value);            
+    		String key = keys.next();
+//          Integer concept_id = Integer.parseInt(key);
+    		String concept_uuid = key;
+           
+    		String value = (String) jObject.get(key);
+
+//          System.out.println("Creating Reading for Concept "+ concept_id +" "+key+", as :"+value);            
+            System.out.println("Creating Reading for Concept "+ concept_uuid +" "+key+", as :"+value);            
             
             Obs obs = new Obs();
             obs.setCreator(u);
             obs.setPerson(person);
 			obs.setObsDatetime(d);
-			//Rakshit's Comment : change 5090 by retreiveElement.getConceptId();
-			Concept concept = (Concept)Context.getConceptService().getConcept(concept_id);
+
+//			Concept concept = (Concept)Context.getConceptService().getConcept(concept_id);
+			Concept concept = (Concept)Context.getConceptService().getConceptByUuid(concept_uuid);
+
 			obs.setConcept(concept);
 			try { 
 				obs.setValueAsString(value);
