@@ -14,24 +14,13 @@
 package org.openmrs.module.sensorreading;
 
 import java.io.Serializable;
-import java.text.ParseException;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-import org.openmrs.BaseOpenmrsObject;
-import org.openmrs.Concept;
-import org.openmrs.ConceptAnswer;
+import org.openmrs.BaseOpenmrsData;
 import org.openmrs.Encounter;
-import org.openmrs.EncounterRole;
-import org.openmrs.EncounterType;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
-import org.openmrs.Person;
-import org.openmrs.Provider;
-import org.openmrs.api.context.Context;
-import org.openmrs.module.sensorreading.api.SensorConceptMappingService;
 
 /**
  * It is a model class. It should extend either {@link BaseOpenmrsObject} or {@link BaseOpenmrsMetadata}.
@@ -42,7 +31,7 @@ import org.openmrs.module.sensorreading.api.SensorConceptMappingService;
  * @author rakshit
  *
  */
-public class SensorReading extends BaseOpenmrsObject implements Serializable {
+public class SensorReading extends BaseOpenmrsData implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -52,11 +41,13 @@ public class SensorReading extends BaseOpenmrsObject implements Serializable {
 	private Patient patient;
 	private Encounter encounter;
 	private Date date;
+	
+	public SensorReading(){
+		System.out.println("SensorReading() Constructor here");
+	}
+	
 	public Encounter getEncounter() {
 		return encounter;
-	}
-	public SensorReading(){
-		//Empty constructor
 	}
 
 	public void setEncounter(Encounter encounter) {

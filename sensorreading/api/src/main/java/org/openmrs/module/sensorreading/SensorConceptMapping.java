@@ -14,10 +14,9 @@
 package org.openmrs.module.sensorreading;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Set;
 
-import org.openmrs.BaseOpenmrsObject;
+import org.openmrs.BaseOpenmrsData;
 import org.openmrs.Concept;
 
 /**
@@ -29,12 +28,23 @@ import org.openmrs.Concept;
  * @author rakshit
  *
  */
-public class SensorConceptMapping extends BaseOpenmrsObject implements Serializable {
+public class SensorConceptMapping extends BaseOpenmrsData implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
 	private SensorMapping sensor;
 	private Set<Concept> concepts ;
+	
+	public SensorConceptMapping(){
+		System.out.println("SensorConceptMapping() Constructor here");
+	}
+	
+	public SensorConceptMapping(SensorMapping sensor,Set<Concept> concepts){
+		System.out.println("SensorConceptMapping(sensor,concepts) Constructor here with id="+sensor.getId());
+		setSensor(sensor);
+		setConcepts(concepts);
+	}
+		
 	@Override
 	public Integer getId() {
 		// TODO Auto-generated method stub
@@ -44,13 +54,19 @@ public class SensorConceptMapping extends BaseOpenmrsObject implements Serializa
 		return sensor;
 	}
 	public void setSensor(SensorMapping sensor) {
+		System.out.println("Request in setSensor "+sensor.getSensor_name());
 		this.sensor = sensor;
+		System.out.println("Sensor Set Done!");
 	}
 	public Set<Concept> getConcepts() {
 		return concepts;
 	}
 	public void setConcepts(Set<Concept> concepts) {
+		System.out.println("Request in setConcepts with concepts set as : "+concepts.size());
+		System.out.println("in concept set method");
+        for (Concept c : concepts)System.out.println(c.getConceptId() + " "+c.getName());
 		this.concepts = concepts;
+		System.out.println("setConcepts Done!");
 	}
 	@Override
 	public void setId(Integer id) {

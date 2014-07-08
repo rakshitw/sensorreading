@@ -16,7 +16,6 @@ package org.openmrs.module.sensorreading.api.db;
 import java.util.List;
 
 import org.openmrs.module.sensorreading.SensorMapping;
-import org.openmrs.module.sensorreading.SensorReading;
 import org.openmrs.module.sensorreading.api.SensorReadingService;
 
 /**
@@ -28,4 +27,5 @@ public interface SensorMappingDAO {
 	public SensorMapping setSensorMapping(SensorMapping sensorMapping);
 	public SensorMapping getSensorMapping(int sensor_id);
 	public SensorMapping deleteSensorMapping(SensorMapping sensorMapping);
+	public List<SensorMapping> getAll();
 }

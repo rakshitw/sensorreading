@@ -56,6 +56,15 @@ public class HibernateSensorConceptMappingDAO implements SensorConceptMappingDAO
 	@Override
 	public SensorConceptMapping setSensorConceptMapping(
 			SensorConceptMapping sensorConceptMapping) {
+		/* Added by Magus for Debugging */
+		System.out.println("New Request in HibernateSensorConceptMappingDAO setSensorConceptMapping");
+		System.out.println("Sensor: "+sensorConceptMapping.getSensor().getSensor_name());
+		System.out.println("Concepts :");
+		for (Concept c : sensorConceptMapping.getConcepts()){
+			System.out.println(c);
+		}
+		/* Added by Magus for Debugging */
+		
 		Set<Concept> concepts =  sensorConceptMapping.getConcepts();
 		for(Concept concept : concepts){
 			SensorConceptUtil scu = new SensorConceptUtil();
@@ -73,6 +82,7 @@ public class HibernateSensorConceptMappingDAO implements SensorConceptMappingDAO
 		SensorMapping sm = Context.getService(SensorMappingService.class).retrieveSensorMapping(sensor_id);
 		Query conceptQuery = sessionFactory.getCurrentSession().createQuery("select E.concept from SensorConceptUtil E WHERE E.sensor = :userValue");
 		conceptQuery.setParameter("userValue",sm);
+		@SuppressWarnings("unchecked")
 		List<Concept> conceptList = conceptQuery.list();
 		Set<Concept> conceptSet = new HashSet<Concept>();
 		for(Concept concept_element : conceptList)
@@ -102,6 +112,13 @@ public class HibernateSensorConceptMappingDAO implements SensorConceptMappingDAO
 			sessionFactory.getCurrentSession().delete(scu);
 		}
 		return sensorConceptMapping;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<SensorConceptMapping> getAll() {
+		System.out.println("New Request in HibernateSensorConceptMappingDAO getAll");
+		return getAllMapping();
 	}
 	/**
 	 * Returns the list of concept-sensor mappings 

@@ -14,7 +14,32 @@
 	<description>OMOD project for SensorReading</description>
 
 	<dependencies>
-
+		<!-- JSON -->
+		<dependency>
+	        <groupId>org.json</groupId>
+	        <artifactId>json</artifactId>
+	        <version>20131018</version>
+    	</dependency>
+	    
+	    <!-- JSON -->
+		<!-- Begin OpenMRS Rest API -->
+		
+		<dependency>
+			<groupId>org.openmrs.module</groupId>
+			<artifactId>webservices.rest-omod-common</artifactId>
+			<version>2.5-SNAPSHOT</version>
+			<type>jar</type>
+			<scope>provided</scope>
+		</dependency>
+        <dependency>
+            <groupId>org.openmrs.module</groupId>
+            <artifactId>webservices.rest-omod-common</artifactId>
+            <version>2.5-SNAPSHOT</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+		<!-- End OpenMRS modules -->
+		
 		<!-- 
 		Add other dependencies from parent's pom: 
 		<dependency> 
@@ -200,5 +225,11 @@
 			</plugin>
 		</plugins>
 	</build>
-
+	
+	<properties>                                                                                                                                  
+		<MODULE_ID>${project.parent.artifactId}</MODULE_ID>                                                                                   
+		<MODULE_NAME>${project.parent.name}</MODULE_NAME>                                                                                     
+		<MODULE_VERSION>${project.parent.version}</MODULE_VERSION>                                                                            
+		<MODULE_PACKAGE>${project.parent.groupId}.${project.parent.artifactId}</MODULE_PACKAGE>                                               
+	</properties>     
 </project>

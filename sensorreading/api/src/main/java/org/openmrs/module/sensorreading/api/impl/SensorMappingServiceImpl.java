@@ -13,6 +13,8 @@
  */
 package org.openmrs.module.sensorreading.api.impl;
 
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.impl.BaseOpenmrsService;
@@ -59,5 +61,10 @@ public class SensorMappingServiceImpl extends BaseOpenmrsService implements Sens
 	@Override
 	public SensorMapping deleteSenorMapping(SensorMapping sensorMapping) {
 		return dao.deleteSensorMapping(sensorMapping);
+	}
+
+	@Override
+	public List<SensorMapping> getAllSensorMappings() {
+		return getDao().getAll();
 	}
 }

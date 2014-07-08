@@ -22,7 +22,6 @@ import org.openmrs.module.sensorreading.SensorConceptMapping;
 import org.openmrs.module.sensorreading.api.SensorConceptMappingService;
 import org.openmrs.module.sensorreading.api.SensorReadingService;
 import org.openmrs.module.sensorreading.api.db.SensorConceptMappingDAO;
-import org.openmrs.module.sensorreading.api.db.SensorMappingDAO;
 
 /**
  * It is a default implementation of {@link SensorReadingService}.
@@ -62,10 +61,15 @@ public class SensorConceptMappingServiceImpl extends BaseOpenmrsService implemen
 	}
 
 	@Override
-	public SensorConceptMapping deleteSensorConceptMapping(
-			SensorConceptMapping sensorConceptMapping) {
+	public SensorConceptMapping deleteSensorConceptMapping(	SensorConceptMapping sensorConceptMapping) {
 		// TODO Auto-generated method stub
 		return dao.deleteSensorConceptMapping(sensorConceptMapping);
+	}
+	
+	@Override
+	public List<SensorConceptMapping> getAllSensorConceptMappings() {
+		System.out.println("New Request in SensorConceptMappingServiceImpl getAllSensorConceptMappings");
+		return getDao().getAll();
 	}
 
 	@Override

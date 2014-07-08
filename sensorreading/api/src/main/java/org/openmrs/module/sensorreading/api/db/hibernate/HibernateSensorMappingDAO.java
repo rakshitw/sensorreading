@@ -13,6 +13,8 @@
  */
 package org.openmrs.module.sensorreading.api.db.hibernate;
 
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.SessionFactory;
@@ -59,5 +61,9 @@ public class HibernateSensorMappingDAO implements SensorMappingDAO {
 		return sensorMapping;
 	}
 
-	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<SensorMapping> getAll() {
+		return (List<SensorMapping>) sessionFactory.getCurrentSession().createCriteria(SensorMapping.class).list();
+	}
 }
